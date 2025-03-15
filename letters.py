@@ -23,26 +23,10 @@ def invert_rows(letter_string: str, letters_per_row=11):
 
     return result
 
-import unittest
-
-class TestInvertRows(unittest.TestCase):
-    #def test_single_row(self):
-    #    self.assertEqual(invert_rows("abcdefghijklmnopqrstuvwxyz"), "abcdefghijklmnopqrstuvwxyz")
-
-    def test_two_rows(self):
-        self.assertEqual(
-            invert_rows("abcd", letters_per_row=2),
-            "abdc"
-        )
-
-    def test_three_rows(self):
-        self.assertEqual(
-            invert_rows('abcdef', letters_per_row=2),
-            "abdcef"
-        )
-
 if __name__ == "__main__":
-    #unittest.main()
+    # some simple test cases
+    assert "dcab" == invert_rows("abcd", letters_per_row=2)
+    assert "efdcab" == invert_rows("abcdef", letters_per_row=2)
 
     characters = invert_rows(letters, 11)
     print(characters)
