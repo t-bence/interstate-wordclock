@@ -13,6 +13,9 @@ Tasks:
 - write code to convert the numbers into X-Y coordinates
 """
 
+from dataclasses import dataclass
+
+MOST = (105, 4)
 ORA = (30, 3)
 VAN = (14, 3)
 MULT = (18, 4)
@@ -42,3 +45,34 @@ HOURS = [
     (61, 5),     # 11 (first part), TIZEN
     (49, 3)      # 11 (second part), EGY
 ]
+
+@dataclass
+class Strip:
+    """A strip of a word"""
+    x: int = 0
+    y: int = 0
+    length: int = 1
+
+
+def converter(input: tuple[int, int]) -> Strip:
+    start, length = input
+    letters_per_row = 11
+    row = start // letters_per_row
+    rem = start % letters_per_row
+
+    y = letters_per_row - 2 - row
+
+    if y % 2 == 0:
+        x = letters_per_row - rem - length
+    else:
+        x = rem
+
+    return Strip(x, y, length)
+
+
+if __name__ == "__main__":
+    assert Strip(0, 9, 3) == converter(TIZ_MULT)
+    assert Strip(1, 0, 4) == converter(MOST)
+    assert Strip(0, 1, 11) == converter(HAROMNEGYED)
+    assert Strip(4, 9, 7) == converter(PERCCEL)
+    assert Strip(0, 8, 4) == converter(MULT)
