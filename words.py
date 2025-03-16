@@ -11,6 +11,16 @@ Tasks:
 - figure out how the lib needs the coordinates
 - write tests
 - write code to convert the numbers into X-Y coordinates
+
+The lib needs coordinates like this. This is the tuple that Strip.to_pixels returns.
+display.rectangle(x, y, w, h)
+x - the destination X coordinate
+y - the destination Y coordinate
+w - the width
+h - the height
+
+https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/modules/picographics#rectangle
+
 """
 
 from dataclasses import dataclass
@@ -52,6 +62,11 @@ class Strip:
     x: int = 0
     y: int = 0
     length: int = 1
+    
+    def to_pixels(self, letter_width: int = 3) -> tuple[int, int, int, int]:
+        """Return x, y, width, height of rectangle to display."""
+        return (self.x * letter_width, self.y * letter_width,
+            self.length * letter_width, letter_width)
 
 
 def converter(input: tuple[int, int]) -> Strip:
@@ -76,3 +91,12 @@ if __name__ == "__main__":
     assert Strip(0, 1, 11) == converter(HAROMNEGYED)
     assert Strip(4, 9, 7) == converter(PERCCEL)
     assert Strip(0, 8, 4) == converter(MULT)
+
+    assert (3, 0, 12, 3) == converter(MOST).to_pixels(3)
+
+    import json
+    print(
+        json.dumps(
+            [converter(h).to_pixels(3) for h in HOURS], indent=4
+        )
+    )
