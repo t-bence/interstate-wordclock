@@ -1,3 +1,7 @@
+"""
+MicroPython docs: https://docs.micropython.org/en/latest/library/machine.RTC.html
+"""
+
 import time
 
 import machine
