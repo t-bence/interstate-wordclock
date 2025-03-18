@@ -40,6 +40,21 @@ MULVA = (78, 5)
 FEL = (66, 3)
 HAROMNEGYED = (88, 11)
 
+WORDS = [MOST,
+ORA,
+VAN,
+MULT,
+OT_MULT,
+TIZ_MULT,
+OT_MULVA,
+TIZ_MULVA,
+PERC,
+PERCCEL,
+NEGYED,
+MULVA,
+FEL,
+HAROMNEGYED]
+
 HOURS = [
     (56, 10),    # TIZENKETTO, which is 0...
     (49, 3),     # EGY
@@ -63,10 +78,10 @@ class Strip:
     y: int = 0
     length: int = 1
     
-    def to_pixels(self, letter_width: int = 3) -> tuple[int, int, int, int]:
-        """Return x, y, width, height of rectangle to display."""
+    def to_pixels(self, letter_width: int = 3) -> tuple[int, int, int]:
+        """Return x, y and number of chars."""
         return (self.x * letter_width, self.y * letter_width,
-            self.length * letter_width, letter_width)
+            self.length)
 
 
 def converter(input: tuple[int, int]) -> Strip:
@@ -92,11 +107,16 @@ if __name__ == "__main__":
     assert Strip(4, 9, 7) == converter(PERCCEL)
     assert Strip(0, 8, 4) == converter(MULT)
 
-    assert (3, 0, 12, 3) == converter(MOST).to_pixels(3)
+    assert (3, 0, 4) == converter(MOST).to_pixels(3)
 
-    import json
-    print(
-        json.dumps(
-            [converter(h).to_pixels(3) for h in HOURS], indent=4
-        )
-    )
+    for w in WORDS:
+        variable_name = [name for name, value in globals().items() if value is w][0]
+        print(f'"{variable_name}": {converter(w).to_pixels(3)},')
+    # import json
+    # print(
+    #     json.dumps(
+    #         #[converter(h).to_pixels(3) for h in HOURS], 
+    #         [converter(w).to_pixels(3) for w in WORDS],
+    #         indent=4
+    #     )
+    # )

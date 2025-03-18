@@ -15,3 +15,13 @@ This repo is about implementing the word clock on the Pimoroni Interstate75 boar
 Let's get started with the [today example](https://github.com/pimoroni/interstate75/blob/main/examples/today.py)
 
 You will need to add a secrets.py as well, with two variables for the SSID and the network password.
+
+## Directions
+
+Take a look at the two arrows on the back of the panel. They should point up and right, then the display is in the expected position. X starts from the left, Y starts from the top.
+
+## TODO
+
+- [x] Get proper word indices for WORD_POSITIONS
+- [] Think about the letter sizing again. The outermost cells should extend a bit out of the LED array I think.
+- [] Test the code
