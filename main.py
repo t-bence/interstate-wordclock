@@ -84,6 +84,7 @@ i75 = Interstate75(
 display = i75.display
 
 # Colors
+BLACK = display.create_pen(0, 0, 0)
 WHITE = display.create_pen(255, 255, 255)
 
 # Word positions (x, y, width, height)
@@ -120,14 +121,15 @@ HOURS = (
 )
 
 def write_characters(x: int, y: int, chars: int) -> None:
-    """Draw a rectangle at the specified coordinates with the given characters."""
+    """Light up LEDs at the specified coordinates for the given number of characters."""
     display.rectangle(x, y, chars * PERIOD - 1, PERIOD - 1)
 
 
 def draw_word_clock():
     # Clear the display
-    display.set_pen(WHITE)
+    display.set_pen(BLACK)
     display.clear()
+    display.set_pen(WHITE)
 
     # Get current time
     t = machine.RTC().datetime()
