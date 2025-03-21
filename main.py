@@ -23,6 +23,31 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
 
+class Word:
+    def __init__(self, x: int, y: int, length: int):
+        """
+        Initialize a Word with its display coordinates and length
+
+        Args:
+            x (int): X coordinate on the display
+            y (int): Y coordinate on the display
+            length (int): Number of characters in the word
+        """
+        self.x = x
+        self.y = y
+        self.length = length
+        self.period = 3  # global lettering period
+
+    def draw(self, display):
+        """
+        Draw the word on the display by creating a rectangular block
+
+        Args:
+            display: The display object to draw on
+        """
+        display.rectangle(self.x, self.y, self.length * self.period - 1, self.period - 1)
+
+
 def network_connect(SSID, PSK):
 
     # Number of attempts to make before timeout
@@ -45,7 +70,6 @@ def network_connect(SSID, PSK):
         print("Unable to connect. Attempting connection again")
 
 
-# Function to sync the Pico RTC using NTP
 def sync_time():
 
     try:
@@ -62,68 +86,66 @@ def sync_time():
 
 # Time words in natural language
 TIME_WORDS = [
-    "MOST ORA VAN",  # 00
-    "ORA MULT OT_MULT PERCCEL",  # 05
+    "MOST ORA VAN",                # 00
+    "ORA MULT OT_MULT PERCCEL",    # 05
     "ORA MULT TIZ_MULT PERCCEL",   # 10
-    "MOST NEGYED VAN",       # 15
-    "NEGYED MULT OT_MULT PERCCEL",# 20
-    "OT_MULVA PERC MULVA FEL",   # 25
-    "MOST FEL VAN",          # 30
-    "FEL MULT OT_MULT PERCCEL",     # 35
-    "FEL MULT TIZ_MULT PERCCEL",          # 40
-    "MOST HAROMNEGYED VAN",         # 45
-    "TIZ_MULVA PERC MULVA ORA",             # 50
-    "OT_MULVA PERC MULVA ORA",            # 55
+    "MOST NEGYED VAN",             # 15
+    "NEGYED MULT OT_MULT PERCCEL", # 20
+    "OT_MULVA PERC MULVA FEL",     # 25
+    "MOST FEL VAN",                # 30
+    "FEL MULT OT_MULT PERCCEL",    # 35
+    "FEL MULT TIZ_MULT PERCCEL",   # 40
+    "MOST HAROMNEGYED VAN",        # 45
+    "TIZ_MULVA PERC MULVA ORA",    # 50
+    "OT_MULVA PERC MULVA ORA"      # 55
 ]
 
 PERIOD = 3 # lettering period: one letter's width plus a border
 
 # Setup for the display
 i75 = Interstate75(
-    display=DISPLAY_INTERSTATE75_32X32, stb_invert=False, panel_type=Interstate75.PANEL_GENERIC)
+    display=DISPLAY_INTERSTATE75_32X32,
+    stb_invert=False,
+    panel_type=Interstate75.PANEL_GENERIC
+)
+
 display = i75.display
 
 # Colors
 BLACK = display.create_pen(0, 0, 0)
 WHITE = display.create_pen(255, 255, 255)
 
-# Word positions (x, y, width, height)
+HOURS = [
+    Word(0, 12, 10),   # TIZENKETTO
+    Word(15, 15, 3),   # EGY
+    Word(15, 12, 5),   # KETTO
+    Word(6, 18, 5),    # HAROM
+    Word(9, 21, 4),    # NEGY
+    Word(21, 18, 2),   # OT
+    Word(0, 21, 3),    # HAT
+    Word(24, 15, 3),   # HET
+    Word(0, 15, 5),    # NYOLC
+    Word(12, 9, 6),    # KILENC
+    Word(24, 18, 3),   # TIZ
+    Word(0, 12, 5)     # TIZEN
+]
+
 WORD_POSITIONS = {
-    "MOST": (3, 0, 4),
-    "ORA": (24, 21, 3),
-    "VAN": (15, 24, 3),
-    "MULT": (0, 24, 4),
-    "OT_MULT": (27, 24, 2),
-    "TIZ_MULT": (0, 27, 3),
-    "OT_MULVA": (18, 0, 2),
-    "TIZ_MULVA": (21, 0, 3),
-    "PERC": (0, 6, 4),
-    "PERCCEL": (12, 27, 7),
-    "NEGYED": (15, 3, 6),
-    "MULVA": (15, 6, 5),
-    "FEL": (0, 9, 3),
-    "HAROMNEGYED": (0, 3, 11)
+    "MOST":          Word(3,   0,  4),
+    "ORA":           Word(24, 21,  3),
+    "VAN":           Word(15, 24,  3),
+    "MULT":          Word(0,  24,  4),
+    "OT_MULT":       Word(27, 24,  2),
+    "TIZ_MULT":      Word(0,  27,  3),
+    "OT_MULVA":      Word(18,  0,  2),
+    "TIZ_MULVA":     Word(21,  0,  3),
+    "PERC":          Word(0,   6,  4),
+    "PERCCEL":       Word(12, 27,  7),
+    "NEGYED":        Word(15,  3,  6),
+    "MULVA":         Word(15,  6,  5),
+    "FEL":           Word(0,   9,  3),
+    "HAROMNEGYED":   Word(0,   3, 11)
 }
-
-HOURS = (
-    (0, 12, 10),
-    (15, 15, 3),
-    (15, 12, 5),
-    (6, 18, 5),
-    (9, 21, 4),
-    (21, 18, 2),
-    (0, 21, 3),
-    (24, 15, 3),
-    (0, 15, 5),
-    (12, 9, 6),
-    (24, 18, 3),
-    (0, 12, 5)
-)
-
-def write_characters(x: int, y: int, chars: int) -> None:
-    """Light up LEDs at the specified coordinates for the given number of characters."""
-    display.rectangle(x, y, chars * PERIOD - 1, PERIOD - 1)
-
 
 def draw_word_clock():
     # Clear the display
@@ -136,10 +158,10 @@ def draw_word_clock():
     hour = t[4] % 12
     minute = t[5]
 
-    # write the hour
-    write_characters(*HOURS[hour])
-    if hour == 11: # TIZEN-EGY consists of two blocks
-        write_characters(*HOURS[1])
+    # Write the hour
+    HOURS[hour].draw(display)
+    if hour == 11:  # TIZEN-EGY consists of two blocks
+        HOURS[1].draw(display)
 
     # Determine which words to light up based on time
     current_words = TIME_WORDS[minute // 5]
@@ -148,7 +170,7 @@ def draw_word_clock():
     for word in current_words.split():
         if word not in WORD_POSITIONS:
             raise ValueError(f"Unknown word: {word}")
-        write_characters(*WORD_POSITIONS[word])
+        WORD_POSITIONS[word].draw(display)
 
         
     # Update display
