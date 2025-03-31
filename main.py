@@ -1,6 +1,5 @@
 import time
 
-import machine
 import network
 from interstate75 import DISPLAY_INTERSTATE75_32X32, Interstate75
 
@@ -166,8 +165,16 @@ WORD_POSITIONS = {
 }
 
 
-def get_current_time():
-    # Get current time
+def get_current_time() -> tuple[int, int]:
+    """Retrieve the current time from the RTC module.
+
+    Returns
+    -------
+    tuple[int, int]
+        Hour and minute values as integers.
+    """
+    import machine
+
     t = machine.RTC().datetime()
     hour = t[4]
     minute = t[5]
