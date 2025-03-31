@@ -23,5 +23,8 @@ Take a look at the two arrows on the back of the panel. They should point up and
 ## TODO
 
 - [x] Get proper word indices for WORD_POSITIONS
-- [] Think about the letter sizing again. The outermost cells should extend a bit out of the LED array I think.
-- [] Test the code
+- [ ] Think about the letter sizing again. The outermost cells should extend a bit out of the LED array I think.
+- [ ] Implement a Display class that wraps the i75.display and handles drawing words with a `show_time(hour: int, minute: int)` method
+- [ ] Create a mock display class
+- [ ] Test the code
+- [ ] Create tests for pull requests
