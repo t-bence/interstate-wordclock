@@ -2,6 +2,27 @@
 <html>
 <head>
     <style>
+        @page {
+            size: A4 landscape; /* or A4, A5, letter, etc. */
+              margin: 0; /* Prevent extra margins */
+        }
+        @media print {
+            body {
+                width: 100%;  /* Ensure full use of available width */
+                overflow: visible !important;
+            }
+
+            .container { 
+                width: 25cm !important;  /* Keep the original size */
+                max-width: none !important;
+                white-space: nowrap; /* Prevent text wrapping */
+            }
+
+            table {
+                table-layout: fixed; /* Prevents auto-resizing */
+            }
+        }
+
         .container {
             width: 25cm;
             height: 25cm;
@@ -17,8 +38,8 @@
         }
         
         td {
-            width: 18mm;
-            height: 18mm;
+            width: calc(192mm/11);
+            height: calc(192mm/11);;
             border: none;
             text-align: center;
             font-size: 12mm;
